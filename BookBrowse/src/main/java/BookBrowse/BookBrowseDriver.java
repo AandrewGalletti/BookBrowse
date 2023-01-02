@@ -1,6 +1,5 @@
 package BookBrowse;
 
-import java.util.Scanner;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
@@ -13,17 +12,14 @@ import com.google.api.services.books.v1.model.Volumes;
 public class BookBrowseDriver {
 	
 	public static BookBrowseUser user;
-	public static Scanner userIn;
 	public static boolean quit = false;
 	
 	public static void main(String[] args) throws Exception {
 		JsonFactory jF = GsonFactory.getDefaultInstance();
 		user = new BookBrowseUser();
-		userIn = new Scanner(System.in);
-		while(!quit) {
+				while(!quit) {
 			queryGBooks(jF,getQuery());	
 		}
-		userIn.close();
 		System.out.println("Thank you for using BookBrowse!");
 	}
 	
@@ -53,12 +49,12 @@ public class BookBrowseDriver {
 
 	private static String getQuery() {
 		System.out.println("Please enter search query");
-		return userIn.nextLine();
+		return user.getInput();
 	}
 	
 	private static void addToReadingList(Volumes vols) {
 		System.out.println("Enter indices 1-5 to add multiple search results to reading list");
-		String reply = userIn.nextLine();
+		String reply = user.getInput();
 		int prevListLength = user.getReadingList().size();
 		for(int i = 0; i < reply.length();i++) {
 			for(int j = 1; j < 6; j++) {
@@ -99,14 +95,16 @@ public class BookBrowseDriver {
 	
 	private static void whatNext() {
 		System.out.println("\nEnter 1 to perform another query, 2 to view reading list, or anything else to quit");
-		String answer = userIn.nextLine();
+		String answer = user.getInput();
 		if(answer.equals("1"))
 			return;
 		if(answer.equals("2")) {
 			displayReadingList();
 			whatNext();
 		}
-		else
+		else {
 			quit = true;
+			user.endInput();
+		}
 	} 
 }
