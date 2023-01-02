@@ -1,6 +1,5 @@
 package BookBrowse;
 
-import java.util.ArrayList;
 import java.util.Scanner;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -13,14 +12,14 @@ import com.google.api.services.books.v1.model.Volumes;
 
 public class BookBrowseDriver {
 	
-	public static ArrayList<Volume> readingList;
+	public static BookBrowseUser user;
 	public static Scanner userIn;
 	public static boolean quit = false;
 	
 	public static void main(String[] args) throws Exception {
 		JsonFactory jF = GsonFactory.getDefaultInstance();
+		user = new BookBrowseUser();
 		userIn = new Scanner(System.in);
-		readingList = new ArrayList<Volume>();
 		while(!quit) {
 			queryGBooks(jF,getQuery());	
 		}
@@ -60,24 +59,24 @@ public class BookBrowseDriver {
 	private static void addToReadingList(Volumes vols) {
 		System.out.println("Enter indices 1-5 to add multiple search results to reading list");
 		String reply = userIn.nextLine();
-		int prevListLength = readingList.size();
+		int prevListLength = user.getReadingList().size();
 		for(int i = 0; i < reply.length();i++) {
 			for(int j = 1; j < 6; j++) {
 				if(reply.substring(i, i+1).equals("" + j)) { 
-					readingList.add(vols.getItems().get(j-1));
+					user.addVolumeToReadingList(vols.getItems().get(j-1));
 				}
 			}
 		}
-		if(readingList.size() > prevListLength)
+		if(user.getReadingList().size() > prevListLength)
 			displayReadingList();
 		whatNext();
 	}
 	
 	private static void displayReadingList() {
-		if(!readingList.isEmpty()) {
+		if(!user.getReadingList().isEmpty()) {
 			int i = 1;
-			for(Volume vol: readingList) {
-				System.out.println("READING LIST");
+			System.out.println("READING LIST");
+			for(Volume vol: user.getReadingList()) {
 				System.out.println(i + " ====================================================+");
 				displayVolumeInfo(vol);
 				i++;
