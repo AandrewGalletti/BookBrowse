@@ -30,10 +30,6 @@ public class BookBrowseUser {
 			displayReadingList();
 	}
 	
-	public ArrayList<Volume> getReadingList() {
-		return readingList;
-	}
-	
 	public String getInput() {
 		String result = userInput.nextLine();
 		return result;

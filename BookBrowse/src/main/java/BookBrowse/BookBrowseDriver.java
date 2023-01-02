@@ -18,7 +18,9 @@ public class BookBrowseDriver {
 		JsonFactory jF = GsonFactory.getDefaultInstance();
 		user = new BookBrowseUser();
 		while(!quit) {
-			queryGBooks(jF,getQuery());	
+			System.out.println("Please enter search query");
+			String query = user.getInput();
+			queryGBooks(jF,query);	
 		}
 		System.out.println("Thank you for using BookBrowse!");
 	}
@@ -45,14 +47,7 @@ public class BookBrowseDriver {
 		}
 		user.addToReadingList(volumes);
 		whatNext();
-	}
-	
-
-	private static String getQuery() {
-		System.out.println("Please enter search query");
-		return user.getInput();
-	}
-	
+	}	
 	
 	protected static void displayVolumeInfo(Volume vol) {
 		Volume.VolumeInfo info = vol.getVolumeInfo();
@@ -65,6 +60,7 @@ public class BookBrowseDriver {
 		System.out.println();
 		System.out.println("Title: " + info.getTitle());
 		System.out.println("Publisher: " + info.getPublisher());
+		
 	} 
 	
 	private static void whatNext() {
