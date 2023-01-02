@@ -16,18 +16,22 @@ public class BookBrowseUser {
 	}
 	
 	public void addToReadingList(Volumes vols) {
-		System.out.println("Enter indices 1-5 to add multiple search results to reading list");
+		System.out.println("\nEnter indices 1-5 to add multiple search results to reading list");
 		String reply = getInput();
+		String addedIndices = "";
 		int prevListLength = readingList.size();
 		for(int i = 0; i < reply.length();i++) {
 			for(int j = 1; j < 6; j++) {
 				if(reply.substring(i, i+1).equals("" + j)) { 
+					addedIndices += (j + " ");
 					readingList.add(vols.getItems().get(j-1));
 				}
 			}
 		}
-		if(readingList.size() > prevListLength)
+		if(readingList.size() > prevListLength) {
+			System.out.println("Added search results " + addedIndices + "to reading list");
 			displayReadingList();
+		}	
 	}
 	
 	public String getInput() {
@@ -42,7 +46,7 @@ public class BookBrowseUser {
 	public void displayReadingList() {
 		if(!readingList.isEmpty()) {
 			int i = 1;
-			System.out.println("READING LIST");
+			System.out.println("\nREADING LIST");
 			for(Volume vol: readingList) {
 				System.out.println(i + " ====================================================+");
 				BookBrowseDriver.displayVolumeInfo(vol);
