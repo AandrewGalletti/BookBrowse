@@ -16,7 +16,7 @@ public class BookBrowseUser {
 	}
 	
 	public void addToReadingList(Volumes vols) {
-		System.out.println("\nEnter indices 1-5 to add multiple search results to reading list");
+		System.out.println("\nEnter indices 1-5 in any order to add multiple search results to reading list");
 		String reply = getInput();
 		String addedIndices = "";
 		int prevListLength = readingList.size();

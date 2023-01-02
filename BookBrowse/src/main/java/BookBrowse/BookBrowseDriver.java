@@ -1,7 +1,6 @@
 package BookBrowse;
 
 import java.net.UnknownHostException;
-
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
@@ -22,13 +21,15 @@ public class BookBrowseDriver {
 		while(!quit) {
 			System.out.println("Please enter search query");
 			String query = user.getInput();
-			try {
-				queryGBooks(jF,query);
-			} catch (Exception e) {
-				if(e instanceof UnknownHostException)
-					System.out.println("Error could not connect to server!");
+			if(query != "" && query != null) {
+				try {
+					queryGBooks(jF,query);
+				} catch (Exception e) {
+					if(e instanceof UnknownHostException)
+						System.out.println("Error could not connect to server!");
+				}
 				whatNext();
-			}	
+			}		
 		}
 		System.out.println("Thank you for using BookBrowse!");
 	}
@@ -54,7 +55,6 @@ public class BookBrowseDriver {
 			displayVolumeInfo(vol);
 		}
 		user.addToReadingList(volumes);
-		whatNext();
 	}	
 	
 	protected static void displayVolumeInfo(Volume vol) {
@@ -78,7 +78,6 @@ public class BookBrowseDriver {
 			return;
 		if(answer.equals("2")) {
 			user.displayReadingList();
-			whatNext();
 		}
 		else {
 			quit = true;
