@@ -17,7 +17,7 @@ public class BookBrowseDriver {
 	public static void main(String[] args) throws Exception {
 		JsonFactory jF = GsonFactory.getDefaultInstance();
 		user = new BookBrowseUser();
-				while(!quit) {
+		while(!quit) {
 			queryGBooks(jF,getQuery());	
 		}
 		System.out.println("Thank you for using BookBrowse!");
@@ -43,7 +43,8 @@ public class BookBrowseDriver {
 			Volume vol = volumes.getItems().get(i);
 			displayVolumeInfo(vol);
 		}
-		addToReadingList(volumes);
+		user.addToReadingList(volumes);
+		whatNext();
 	}
 	
 
@@ -52,35 +53,8 @@ public class BookBrowseDriver {
 		return user.getInput();
 	}
 	
-	private static void addToReadingList(Volumes vols) {
-		System.out.println("Enter indices 1-5 to add multiple search results to reading list");
-		String reply = user.getInput();
-		int prevListLength = user.getReadingList().size();
-		for(int i = 0; i < reply.length();i++) {
-			for(int j = 1; j < 6; j++) {
-				if(reply.substring(i, i+1).equals("" + j)) { 
-					user.addVolumeToReadingList(vols.getItems().get(j-1));
-				}
-			}
-		}
-		if(user.getReadingList().size() > prevListLength)
-			displayReadingList();
-		whatNext();
-	}
 	
-	private static void displayReadingList() {
-		if(!user.getReadingList().isEmpty()) {
-			int i = 1;
-			System.out.println("READING LIST");
-			for(Volume vol: user.getReadingList()) {
-				System.out.println(i + " ====================================================+");
-				displayVolumeInfo(vol);
-				i++;
-			}	
-		}
-	}
-	
-	private static void displayVolumeInfo(Volume vol) {
+	protected static void displayVolumeInfo(Volume vol) {
 		Volume.VolumeInfo info = vol.getVolumeInfo();
 		System.out.print("Author(s): ");
 		if(info.getAuthors() != null) {
@@ -99,7 +73,7 @@ public class BookBrowseDriver {
 		if(answer.equals("1"))
 			return;
 		if(answer.equals("2")) {
-			displayReadingList();
+			user.displayReadingList();
 			whatNext();
 		}
 		else {

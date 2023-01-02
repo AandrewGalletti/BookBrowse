@@ -3,6 +3,7 @@ package BookBrowse;
 import java.util.ArrayList;
 import java.util.Scanner;
 import com.google.api.services.books.v1.model.Volume;
+import com.google.api.services.books.v1.model.Volumes;
 
 public class BookBrowseUser {
 	
@@ -14,8 +15,19 @@ public class BookBrowseUser {
 		userInput = new Scanner(System.in);
 	}
 	
-	public void addVolumeToReadingList(Volume vol) {
-		readingList.add(vol);
+	public void addToReadingList(Volumes vols) {
+		System.out.println("Enter indices 1-5 to add multiple search results to reading list");
+		String reply = getInput();
+		int prevListLength = readingList.size();
+		for(int i = 0; i < reply.length();i++) {
+			for(int j = 1; j < 6; j++) {
+				if(reply.substring(i, i+1).equals("" + j)) { 
+					readingList.add(vols.getItems().get(j-1));
+				}
+			}
+		}
+		if(readingList.size() > prevListLength)
+			displayReadingList();
 	}
 	
 	public ArrayList<Volume> getReadingList() {
@@ -29,5 +41,17 @@ public class BookBrowseUser {
 	
 	public void endInput() {
 		userInput.close();
+	}
+	
+	public void displayReadingList() {
+		if(!readingList.isEmpty()) {
+			int i = 1;
+			System.out.println("READING LIST");
+			for(Volume vol: readingList) {
+				System.out.println(i + " ====================================================+");
+				BookBrowseDriver.displayVolumeInfo(vol);
+				i++;
+			}	
+		}
 	}
 }
