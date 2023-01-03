@@ -10,8 +10,7 @@ import com.google.api.services.books.v1.Books.Volumes.List;
 import com.google.api.services.books.v1.model.Volume;
 import com.google.api.services.books.v1.model.Volumes;
 
-public class BookBrowseDriver {
-	
+public class BookBrowseDriver {	
 	public static BookBrowseUser user;
 	public static boolean quit = false;
 	
@@ -23,7 +22,11 @@ public class BookBrowseDriver {
 			String query = user.getInput();
 			if(query != "" && query != null) {
 				try {
-					queryGBooks(jF,query);
+					Volumes searchResults = queryGBooks(jF,query);
+					displaySearchResults(searchResults);
+					System.out.println("\nEnter indices 1-5 in any order to add multiple search results to reading list");
+					String savedSearchIndices = user.getInput();
+					user.addToReadingList(searchResults, savedSearchIndices);
 				} catch (Exception e) {
 					if(e instanceof UnknownHostException)
 						System.out.println("Error could not connect to server!");
@@ -34,7 +37,7 @@ public class BookBrowseDriver {
 		System.out.println("Thank you for using BookBrowse!");
 	}
 	
-	private static void queryGBooks(JsonFactory Jf, String query) throws Exception {
+	protected static Volumes queryGBooks(JsonFactory Jf, String query) throws Exception {
 		final Books books = new Books.Builder(GoogleNetHttpTransport.newTrustedTransport(), Jf, null)
 				.setApplicationName("BookBuilder")
 				.setGoogleClientRequestInitializer(new BooksRequestInitializer(null))
@@ -43,19 +46,22 @@ public class BookBrowseDriver {
 		System.out.println("Query: [" + query + "]");
 		List volumesList = books.volumes().list(query);
 		Volumes volumes = volumesList.execute();
+		return volumes;
+	}
+	
+	private static void displaySearchResults(Volumes vols) {
 		System.out.println("\nSEARCH RESULTS");
-		if (volumes.getTotalItems() == 0 || volumes.getItems() == null) {
+		if (vols.getTotalItems() == 0 || vols.getItems() == null) {
 		    System.out.println("No matches found.");
 		    return;
 		}
 		
 		for (int i = 0; i < 5; i++) {
 			System.out.println((i+1) + " ===================================================+");
-			Volume vol = volumes.getItems().get(i);
+			Volume vol = vols.getItems().get(i);
 			displayVolumeInfo(vol);
 		}
-		user.addToReadingList(volumes);
-	}	
+	}
 	
 	protected static void displayVolumeInfo(Volume vol) {
 		Volume.VolumeInfo info = vol.getVolumeInfo();

@@ -6,7 +6,7 @@ import com.google.api.services.books.v1.model.Volume;
 import com.google.api.services.books.v1.model.Volumes;
 
 public class BookBrowseUser {
-	
+
 	private ArrayList<Volume> readingList;
 	private Scanner userInput;
 	
@@ -14,15 +14,13 @@ public class BookBrowseUser {
 		readingList = new ArrayList<>();
 		userInput = new Scanner(System.in);
 	}
-	
-	public void addToReadingList(Volumes vols) {
-		System.out.println("\nEnter indices 1-5 in any order to add multiple search results to reading list");
-		String reply = getInput();
+
+	public void addToReadingList(Volumes vols, String indices) {
 		String addedIndices = "";
 		int prevListLength = readingList.size();
-		for(int i = 0; i < reply.length();i++) {
+		for(int i = 0; i < indices.length();i++) {
 			for(int j = 1; j < 6; j++) {
-				if(reply.substring(i, i+1).equals("" + j)) { 
+				if(indices.substring(i, i+1).equals("" + j)) { 
 					addedIndices += (j + " ");
 					readingList.add(vols.getItems().get(j-1));
 				}
@@ -41,6 +39,10 @@ public class BookBrowseUser {
 	
 	public void endInput() {
 		userInput.close();
+	}
+	
+	public ArrayList<Volume> getReadingList(){
+		return readingList;
 	}
 	
 	public void displayReadingList() {
