@@ -84,6 +84,7 @@ public class BookBrowseDriver {
 			return;
 		if(answer.equals("2")) {
 			user.displayReadingList();
+			whatNext();
 		}
 		else {
 			quit = true;
